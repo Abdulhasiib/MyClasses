@@ -22,6 +22,8 @@ namespace MyClassesTest
             }
         }
 
+        public TestContext TestContext { get; set; }
+
         [TestMethod]
         public void FileDoesExist()
         {
@@ -30,11 +32,15 @@ namespace MyClassesTest
             bool IsFileExist;
 
             SetGoodFileName();
-            File.AppendAllText(_goodFileName, "This is a test file");
+            TestContext.WriteLine("Creating Test File..");
 
+            File.AppendAllText(_goodFileName, "This is a test file");
+            TestContext.WriteLine("Updating Test File..");
+            
             IsFileExist = fp.FileExists(_goodFileName);
 
             File.Delete(_goodFileName);
+            TestContext.WriteLine("Deleting Test File..");
 
             Assert.IsTrue(IsFileExist);
         }
