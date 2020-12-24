@@ -1,12 +1,27 @@
 ﻿using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using MyClasses;
+using System.IO;
+using System.Configuration;
 
 namespace MyClassesTest
 {
     [TestClass]
     public class FileProcessTest
     {
+        public const string badFileName = @"C:\Test.test";
+        string _goodFileName;
+
+        public void SetGoodFileName()
+        {
+            _goodFileName = ConfigurationManager.AppSettings["goodFileName"];
+
+            if (_goodFileName.Contains("[AppPath]"))
+            {
+                _goodFileName = _goodFileName.Replace("[AppPath]", Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData));
+            }
+        }
+
         [TestMethod]
         public void FileDoesExist()
         {
@@ -14,7 +29,12 @@ namespace MyClassesTest
 
             bool IsFileExist;
 
-            IsFileExist = fp.FileExists(@"C:\UnitTest.txt");
+            SetGoodFileName();
+            File.AppendAllText(_goodFileName, "This is a test file");
+
+            IsFileExist = fp.FileExists(_goodFileName);
+
+            File.Delete(_goodFileName);
 
             Assert.IsTrue(IsFileExist);
         }
@@ -26,7 +46,7 @@ namespace MyClassesTest
 
             bool IsFileExist;
 
-            IsFileExist = fp.FileExists(@"C:\Test.test");
+            IsFileExist = fp.FileExists(badFileName);
 
             Assert.IsFalse(IsFileExist);
         }
