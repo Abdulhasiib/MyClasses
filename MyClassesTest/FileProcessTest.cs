@@ -9,12 +9,16 @@ namespace MyClassesTest
     [TestClass]
     public class FileProcessTest
     {
+        #region Declarations
+
         public const string badFileName = @"C:\Test.test";
         public const string Deployment_File = @"DeployText.txt";
         string _goodFileName;
-
-        #region Class Initialize and Cleanup
         
+        #endregion
+        
+        #region Class Initialize and Cleanup
+
         [ClassInitialize]
         public static void ClassInitialization(TestContext tc)
         {
