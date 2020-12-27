@@ -10,6 +10,7 @@ namespace MyClassesTest
     public class FileProcessTest
     {
         public const string badFileName = @"C:\Test.test";
+        public const string Deployment_File = @"DeployText.txt";
         string _goodFileName;
 
         #region Class Initialize and Cleanup
@@ -80,6 +81,21 @@ namespace MyClassesTest
             IsFileExist = fp.FileExists(_goodFileName);
             
             Assert.IsTrue(IsFileExist);
+        }
+
+
+        [TestMethod]
+        [DeploymentItem(Deployment_File)]
+        public void FileDoesExistUsingDeploymentAttribute()
+        {
+            FileProcess fp = new FileProcess();
+            string FileName;
+            bool IsFileExist;
+
+            FileName = TestContext.DeploymentDirectory + @"\" + Deployment_File;
+            TestContext.WriteLine("Checking File {0}", FileName);
+
+            IsFileExist = fp.FileExists(FileName);
         }
 
         [TestMethod]
