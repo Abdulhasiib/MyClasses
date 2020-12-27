@@ -12,6 +12,49 @@ namespace MyClassesTest
         public const string badFileName = @"C:\Test.test";
         string _goodFileName;
 
+        #region Class Initialize and Cleanup
+        
+        [ClassInitialize]
+        public static void ClassInitialization(TestContext tc)
+        {
+            tc.WriteLine("Inside Class Initilization");
+        }
+
+        [ClassCleanup]
+        public static void ClassCleanup()
+        {
+
+        }
+
+        #endregion
+
+        #region Test Initialize and Cleanup
+
+        [TestInitialize]
+        public void TestInitialization()
+        {
+            if(TestContext.TestName == "FileDoesExist")
+            {
+                SetGoodFileName();
+                if (!string.IsNullOrEmpty(_goodFileName))
+                {
+                    TestContext.WriteLine("Test File Created at {0}", _goodFileName);
+                }
+            }
+        }
+
+        [TestCleanup]
+        public void TestCleanup()
+        {
+            if(TestContext.TestName == "FileDoesExist")
+            {
+                File.Delete(_goodFileName);
+                TestContext.WriteLine("Deleting Test File {0}", _goodFileName);
+            }
+        }
+
+        #endregion
+
         public void SetGoodFileName()
         {
             _goodFileName = ConfigurationManager.AppSettings["goodFileName"];
@@ -30,18 +73,12 @@ namespace MyClassesTest
             FileProcess fp = new FileProcess();
 
             bool IsFileExist;
-
-            SetGoodFileName();
-            TestContext.WriteLine("Creating Test File..");
-
+            
             File.AppendAllText(_goodFileName, "This is a test file");
-            TestContext.WriteLine("Updating Test File..");
+            TestContext.WriteLine("Updating Test File {0}", _goodFileName);
             
             IsFileExist = fp.FileExists(_goodFileName);
-
-            File.Delete(_goodFileName);
-            TestContext.WriteLine("Deleting Test File..");
-
+            
             Assert.IsTrue(IsFileExist);
         }
 
